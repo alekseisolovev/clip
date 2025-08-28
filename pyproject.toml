@@ -1,0 +1,14 @@
+[project]
+name = "clip"
+version = "0.1.0"
+description = "A Streamlit RAG app for video clips."
+requires-python = ">=3.11"
+dependencies = [
+    "streamlit",
+    "google-generativeai",
+    "chromadb-client",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
