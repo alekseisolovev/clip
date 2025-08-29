@@ -1,7 +1,7 @@
 [project]
 name = "clip"
 version = "0.1.0"
-description = "A Streamlit RAG app for video clips."
+description = "Video Q&A with LLMs."
 requires-python = ">=3.11"
 dependencies = [
     "streamlit",
