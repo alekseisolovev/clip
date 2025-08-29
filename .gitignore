@@ -1,0 +1,29 @@
+# Byte-compiled / optimized / C extensions
+__pycache__/
+*.pyc
+*.$py.class
+
+# Environment
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE / Editor specific
+.idea/
+.vscode/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+*.bin
+
+# Testing
+.pytest_cache/
+
+# Data files
+*.csv
+*.tsv
+*.xlsx
+*.pkl
