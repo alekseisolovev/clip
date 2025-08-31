@@ -5,8 +5,11 @@ description = "Video Q&A with LLMs."
 requires-python = ">=3.11"
 dependencies = [
     "streamlit",
-    "google-generativeai",
     "chromadb-client",
+    "langchain",
+    "langchain-google-genai",
+    "langgraph",
+    "langchain_community",
 ]
 
 [build-system]
