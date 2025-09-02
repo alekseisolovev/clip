@@ -1,6 +1,10 @@
 import streamlit as st
+from langchain.schema import AIMessage, HumanMessage
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 st.set_page_config(layout="wide")
+
+model = ChatGoogleGenerativeAI(model="gemini-2.5-flash")
 
 playlist = {
     "Siemens ET200SP hardware assembly, connection to PLC and TIA configuration": {
@@ -13,6 +17,8 @@ playlist = {
 
 if "selected_video_url" not in st.session_state:
     st.session_state.selected_video_url = None
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
 
 st.sidebar.title("Video Playlist")
 st.sidebar.markdown("Click on a title below to select the video.")
@@ -20,6 +26,7 @@ st.sidebar.markdown("Click on a title below to select the video.")
 for title, video_info in playlist.items():
     if st.sidebar.button(title, key=f"btn_{title}", use_container_width=True):
         st.session_state.selected_video_url = video_info["url"]
+        st.session_state.chat_history = []
 
 st.markdown(
     """
@@ -30,16 +37,24 @@ st.markdown(
 )
 
 if st.session_state.selected_video_url:
+
     st.video(st.session_state.selected_video_url)
 
-    st.subheader("Ask a question")
-    start_time = st.number_input(
-        "Start video at (seconds):", min_value=0, value=0, step=1
-    )
-    query = st.text_input("Ask a question about the video:", key="query_input")
+    for message in st.session_state.chat_history:
+        role = "Human" if isinstance(message, HumanMessage) else "AI"
+        with st.chat_message(role):
+            st.markdown(message.content)
 
-    if query:
-        st.info("Backend logic to process the query and timestamp will go here.")
-        st.success(f"You asked: '{query}' starting from {start_time}s.")
-else:
-    st.info("Please select a video from the playlist on the left to begin.")
+    user_prompt = st.chat_input("Ask Gemini anything about the video...")
+    if user_prompt:
+        st.session_state.chat_history.append(HumanMessage(content=user_prompt))
+        with st.chat_message("Human"):
+            st.markdown(user_prompt)
+
+        with st.chat_message("AI"):
+            with st.spinner("Thinking..."):
+                response = model.invoke(st.session_state.chat_history)
+                st.session_state.chat_history.append(
+                    AIMessage(content=response.content)
+                )
+                st.markdown(response.content)
